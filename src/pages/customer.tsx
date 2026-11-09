@@ -1,5 +1,5 @@
 import { Heart, List, MapPin, MessageSquare, Navigation, Search, Settings } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type CSSProperties } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { MapArt, ShopIcon, ShopRow, STATUS, StatusPill, Title } from '../components/ui'
 import { useStore } from '../store'
@@ -46,7 +46,7 @@ export function Home() {
             type="button"
             aria-pressed={cat === c}
             onClick={() => setCat(c)}
-            className={`h-[38px] flex-none rounded-full px-4 text-[15px] ${cat === c ? 'bg-ink font-bold text-paper' : 'border border-line bg-white'}`}
+            className={`h-[38px] flex-none rounded-full px-4 text-[15px] transition-colors ${cat === c ? 'bg-ink font-bold text-paper' : 'border border-line bg-white'}`}
           >
             {c}
           </button>
@@ -76,8 +76,8 @@ export function Home() {
       </div>
 
       <div className="flex flex-col gap-2.5">
-        {list.map((s) => (
-          <ShopRow key={s.id} shop={s} />
+        {list.map((s, i) => (
+          <ShopRow key={s.id} shop={s} i={i} />
         ))}
         {list.length === 0 && <p className="py-8 text-center text-muted">لا توجد محلات بهذا البحث</p>}
       </div>
@@ -109,10 +109,10 @@ export function MapScreen() {
               className={`absolute flex -translate-x-1/2 -translate-y-full flex-col items-center gap-1 ${on ? 'z-20' : 'z-10'}`}
               style={{ left: `${s.x}%`, top: `${s.y}%` }}
             >
-              <span className={`rounded-[10px] px-2.5 py-1 text-[13px] font-bold whitespace-nowrap shadow-md ${on ? 'bg-ink text-paper' : 'bg-white'}`}>
+              <span className={`rounded-[10px] px-2.5 py-1 text-[13px] font-bold whitespace-nowrap shadow-md transition-colors ${on ? 'bg-ink text-paper' : 'bg-white'}`}>
                 {s.name} · {STATUS[s.status].label}
               </span>
-              <span className={`rounded-full border-white ${on ? 'size-[30px] border-[5px]' : 'size-[22px] border-4'}`} style={{ background: STATUS[s.status].pin }} />
+              <span className={`rounded-full border-white transition-all duration-200 ${on ? 'size-[30px] border-[5px]' : 'size-[22px] border-4'}`} style={{ background: STATUS[s.status].pin }} />
             </button>
           )
         })}
@@ -131,7 +131,7 @@ export function MapScreen() {
       </div>
 
       {selected && (
-        <div className="absolute inset-x-4 bottom-4 z-30 flex flex-col gap-3 rounded-[22px] bg-white p-4 shadow-xl">
+        <div key={selected.id} className="absolute inset-x-4 bottom-4 z-30 flex animate-sheet flex-col gap-3 rounded-[22px] bg-white p-4 shadow-xl">
           <div className="flex items-center gap-3">
             <ShopIcon shop={selected} size={52} />
             <span className="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -142,7 +142,7 @@ export function MapScreen() {
             </span>
             <StatusPill status={selected.status} />
           </div>
-          {showRoute && <p className="text-sm font-bold text-[#2F6FD6]">الطريق مرسوم على الخريطة · حوالي 6 دقائق مشيًا</p>}
+          {showRoute && <p className="animate-rise text-sm font-bold text-[#2F6FD6]">الطريق مرسوم على الخريطة · حوالي 6 دقائق مشيًا</p>}
           <div className="flex gap-2.5">
             <Link to={`/shop/${selected.id}`} className="flex h-[46px] flex-1 items-center justify-center rounded-[14px] bg-open font-bold text-white">
               التفاصيل
@@ -165,8 +165,8 @@ export function Favorites() {
   return (
     <div className="flex flex-col gap-3.5 px-5 pt-5 pb-4">
       <Title>المفضلة</Title>
-      {favs.map((s) => (
-        <ShopRow key={s.id} shop={s} />
+      {favs.map((s, i) => (
+        <ShopRow key={s.id} shop={s} i={i} />
       ))}
       {favs.length === 0 && (
         <div className="flex flex-col items-center gap-2 py-16 text-center text-muted">
@@ -185,10 +185,14 @@ export function MyQuestions() {
   return (
     <div className="flex flex-col gap-3.5 px-5 pt-5 pb-4">
       <Title>أسئلتي</Title>
-      {mine.map((q) => {
+      {mine.map((q, i) => {
         const shop = shops.find((s) => s.id === q.shopId)!
         return (
-          <Link key={q.id} to={`/shop/${shop.id}/ask`} className="flex flex-col gap-2 rounded-[18px] border border-line bg-white p-4">
+          <Link
+            key={q.id}
+            to={`/shop/${shop.id}/ask`}
+            style={{ '--i': i } as CSSProperties}
+            className="stagger flex animate-rise flex-col gap-2 rounded-[18px] border border-line bg-white p-4">
             <span className="flex items-center justify-between text-[13px] text-faint">
               <span>{shop.name}</span>
               <span>{q.ago}</span>

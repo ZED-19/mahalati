@@ -57,7 +57,7 @@ export function InstallBanner() {
   }
 
   return (
-    <div className="mx-4 mt-3 flex items-center gap-3 rounded-[18px] bg-ink p-3 ps-4 text-paper">
+    <div className="mx-4 mt-3 flex animate-rise items-center gap-3 rounded-[18px] bg-ink p-3 ps-4 text-paper">
       <span className="flex min-w-0 flex-1 flex-col gap-1">
         <span className="text-[15px] font-bold">أضف محلاتي إلى شاشتك الرئيسية</span>
         {isIOS ? (

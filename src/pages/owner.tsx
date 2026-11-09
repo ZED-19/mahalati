@@ -1,5 +1,5 @@
 import { CalendarDays, Store, User } from 'lucide-react'
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { BackButton, STATUS, Title } from '../components/ui'
 import { DAYS, OWNER_SHOP, todayIndex, type Status } from '../data/shops'
@@ -27,7 +27,7 @@ export function OwnerHome() {
 
       <section className="flex flex-col items-center gap-4 rounded-3xl bg-ink px-[18px] py-[22px] text-paper">
         <span className="text-[15px] text-[#B9C7C0]">حالة محلّي الآن</span>
-        <span className={`rounded-full px-12 py-3 font-head text-[44px] leading-tight font-black text-ink ${STATUS[shop.status].big}`}>{STATUS[shop.status].label}</span>
+        <span key={shop.status} className={`animate-pop rounded-full px-12 py-3 font-head text-[44px] leading-tight font-black text-ink ${STATUS[shop.status].big}`}>{STATUS[shop.status].label}</span>
         <span className="text-center text-sm text-[#C9D6CF]">
           يرى الزبائن: {STATUS[shop.status].label} · {shop.next}
         </span>
@@ -38,7 +38,7 @@ export function OwnerHome() {
               type="button"
               aria-pressed={shop.status === k}
               onClick={() => pick(k)}
-              className={`h-12 flex-1 rounded-[14px] text-base font-bold transition ${shop.status === k ? `${STATUS[k].big} text-ink` : 'text-[#C9D6CF]'}`}
+              className={`h-12 flex-1 rounded-[14px] text-base font-bold transition-colors duration-200 ${shop.status === k ? `${STATUS[k].big} text-ink` : 'text-[#C9D6CF]'}`}
             >
               {STATUS[k].label}
             </button>
@@ -48,7 +48,7 @@ export function OwnerHome() {
 
       <div className="flex gap-3">
         <Link to="/owner/inbox" className="flex flex-1 flex-col gap-1 rounded-[18px] border border-line bg-white p-4">
-          <span className="font-head text-3xl leading-tight font-black text-closed">{pending.length}</span>
+          <span key={pending.length} className="animate-pop font-head text-3xl leading-tight font-black text-closed">{pending.length}</span>
           <span className="text-sm font-bold">أسئلة تنتظر ردك</span>
         </Link>
         <div className="flex flex-1 flex-col gap-1 rounded-[18px] border border-line bg-white p-4">
@@ -102,7 +102,7 @@ export function Inbox() {
     answer(id, a)
     setTouched((t) => (t.includes(id) ? t : [...t, id]))
   }
-  const tabCls = (on: boolean) => `h-11 rounded-full px-4 text-sm ${on ? 'bg-ink font-bold text-paper' : 'border border-line bg-white'}`
+  const tabCls = (on: boolean) => `h-11 rounded-full px-4 text-sm transition-colors ${on ? 'bg-ink font-bold text-paper' : 'border border-line bg-white'}`
 
   return (
     <div className="flex flex-col gap-3.5 px-5 pt-5 pb-4">
@@ -119,8 +119,11 @@ export function Inbox() {
         </button>
       </div>
 
-      {list.map((q) => (
-        <article key={q.id} className={`flex flex-col gap-3 rounded-[20px] bg-white p-4 ${q.answer === null ? 'border-2 border-open' : 'border border-line'}`}>
+      {list.map((q, i) => (
+        <article
+          key={q.id}
+          style={{ '--i': i } as CSSProperties}
+          className={`stagger flex animate-rise flex-col gap-3 rounded-[20px] bg-white p-4 transition-colors ${q.answer === null ? 'border-2 border-open' : 'border border-line'}`}>
           <div className="flex items-center justify-between text-[13px] text-faint">
             <span>زبون · {q.from}</span>
             <span className="text-xs">{q.ago}</span>
@@ -136,7 +139,7 @@ export function Inbox() {
               </button>
             </div>
           ) : (
-            <div className="flex items-center justify-between rounded-[14px] bg-[#EEF3EF] py-1 ps-3.5 pe-1">
+            <div className="flex animate-pop items-center justify-between rounded-[14px] bg-[#EEF3EF] py-1 ps-3.5 pe-1">
               <span className="text-[15px] font-bold text-open-dark">تم إرسال ردك: {q.answer === 'yes' ? 'متوفر' : 'غير متوفر'}</span>
               <button type="button" onClick={() => reply(q.id, null)} className="h-11 rounded-[10px] px-3 text-sm font-bold text-open">
                 تراجع
@@ -179,7 +182,7 @@ export function SettingsScreen() {
               role="radio"
               aria-checked={role === r}
               onClick={() => choose(r)}
-              className={`flex min-h-[72px] flex-1 flex-col items-center justify-center gap-1 rounded-[14px] px-2 ${role === r ? 'bg-ink text-paper' : 'text-ink'}`}
+              className={`flex min-h-[72px] flex-1 flex-col items-center justify-center gap-1 rounded-[14px] px-2 transition-colors duration-200 ${role === r ? 'bg-ink text-paper' : 'text-ink'}`}
             >
               <Icon size={22} aria-hidden />
               <span className="font-bold">{label}</span>

@@ -18,7 +18,7 @@ export function ShopPage() {
   const action = 'flex h-16 flex-1 flex-col items-center justify-center gap-1 rounded-2xl border border-line bg-white text-sm font-bold'
 
   return (
-    <div className="pt-safe flex min-h-0 flex-1 flex-col overflow-y-auto">
+    <div className="pt-safe flex min-h-0 flex-1 animate-page flex-col overflow-y-auto">
       <div className="flex flex-1 flex-col gap-3.5 px-5 pt-4 pb-[max(20px,env(safe-area-inset-bottom))]">
         <div className="flex items-center justify-between">
           <BackButton />
@@ -26,14 +26,14 @@ export function ShopPage() {
             {shop.category} · {shop.distance}
           </span>
           <IconButton label={fav ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'} onClick={() => toggleFav(shop.id)} className="text-closed">
-            <Heart size={22} fill={fav ? 'currentColor' : 'none'} aria-hidden />
+            <Heart key={String(fav)} size={22} fill={fav ? 'currentColor' : 'none'} className="animate-pop" aria-hidden />
           </IconButton>
         </div>
 
         <section className="flex flex-col gap-2.5 rounded-[22px] bg-ink p-5 text-paper">
           <h1 className="font-head text-[26px] leading-tight font-black">{shop.name}</h1>
           <div className="flex flex-wrap items-center gap-3">
-            <span className={`rounded-full px-5 py-2 font-head text-xl font-extrabold text-ink ${st.big}`}>{shop.status === 'open' ? 'مفتوح الآن' : st.label}</span>
+            <span key={shop.status} className={`animate-pop rounded-full px-5 py-2 font-head text-xl font-extrabold text-ink ${st.big}`}>{shop.status === 'open' ? 'مفتوح الآن' : st.label}</span>
             <span className="text-base text-[#C9D6CF]">{shop.next}</span>
           </div>
           <span className="flex items-center gap-1.5 text-[13px] text-[#9FB3AA]">
@@ -113,7 +113,7 @@ export function AskScreen() {
   const reply = shop.status === 'open' ? 'يرد عادة خلال دقائق' : 'سيرد عند الفتح'
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="flex min-h-0 flex-1 animate-page flex-col">
       <header className="pt-safe flex-none border-b border-line bg-white">
         <div className="flex items-center gap-3 px-5 py-4">
           <BackButton className="bg-paper" />
@@ -130,7 +130,7 @@ export function AskScreen() {
         <span className="self-center rounded-full bg-[#E9E4D8] px-3 py-1 text-xs text-muted">اليوم</span>
         {thread.length === 0 && <p className="py-6 text-center text-muted">اسأل {shop.name} إن كان المنتج متوفرًا قبل أن تتنقّل.</p>}
         {thread.map((q) => (
-          <div key={q.id} className="flex flex-col gap-3.5">
+          <div key={q.id} className="flex animate-rise flex-col gap-3.5">
             <div className="max-w-[78%] self-end rounded-[18px_18px_18px_4px] bg-ink px-3.5 py-3 text-base leading-normal text-paper">
               {q.text}
               <span className="flex items-center gap-1 pt-1 text-[11px] text-[#9FB3AA]">
@@ -145,7 +145,7 @@ export function AskScreen() {
               </span>
             </div>
             {q.answer !== null && (
-              <div className="flex max-w-[78%] flex-col gap-2 self-start rounded-[18px_18px_4px_18px] border border-line bg-white px-3.5 py-3">
+              <div className="flex max-w-[78%] animate-pop flex-col gap-2 self-start rounded-[18px_18px_4px_18px] border border-line bg-white px-3.5 py-3">
                 <AnswerBadge answer={q.answer} />
                 {q.note && <span className="text-base leading-normal">{q.note}</span>}
               </div>
@@ -174,7 +174,7 @@ export function AskScreen() {
               <span className="sr-only">سؤالك</span>
               <input value={text} onChange={(e) => setText(e.target.value)} placeholder="اكتب اسم المنتج أو سؤالك" className="min-w-0 flex-1 bg-transparent text-base outline-none" />
             </label>
-            <button type="submit" aria-label="إرسال" disabled={!text.trim()} className="flex size-12 flex-none items-center justify-center rounded-2xl bg-open text-white disabled:opacity-40">
+            <button type="submit" aria-label="إرسال" disabled={!text.trim()} className="flex size-12 flex-none items-center justify-center rounded-2xl bg-open text-white transition-opacity disabled:opacity-40">
               <SendHorizontal size={22} className="-scale-x-100" aria-hidden />
             </button>
           </div>

@@ -1,5 +1,5 @@
 import { Beef, BookOpen, Carrot, ChevronRight, Coffee, Croissant, Pill, ShoppingBasket, type LucideIcon } from 'lucide-react'
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { USER_POS, type Shop, type Status } from '../data/shops'
 import { useStore } from '../store'
@@ -30,12 +30,16 @@ export function ShopIcon({ shop, size = 48 }: { shop: Shop; size?: number }) {
 }
 
 export function StatusPill({ status, className = '' }: { status: Status; className?: string }) {
-  return <span className={`flex-none rounded-full px-3 py-1 text-[13px] font-bold ${STATUS[status].pill} ${className}`}>{STATUS[status].label}</span>
+  return <span key={status} className={`flex-none animate-pop rounded-full px-3 py-1 text-[13px] font-bold ${STATUS[status].pill} ${className}`}>{STATUS[status].label}</span>
 }
 
-export function ShopRow({ shop }: { shop: Shop }) {
+export function ShopRow({ shop, i = 0 }: { shop: Shop; i?: number }) {
   return (
-    <Link to={`/shop/${shop.id}`} className="flex items-center gap-3 rounded-[18px] border border-line bg-white p-3.5 active:bg-paper">
+    <Link
+      to={`/shop/${shop.id}`}
+      style={{ '--i': i } as CSSProperties}
+      className="stagger flex animate-rise items-center gap-3 rounded-[18px] border border-line bg-white p-3.5 active:bg-paper"
+    >
       <ShopIcon shop={shop} />
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
         <span className="truncate text-[17px] font-bold">{shop.name}</span>
@@ -115,7 +119,7 @@ export function Toast() {
   if (!msg) return null
   return (
     <div role="status" className="pointer-events-none absolute inset-x-4 bottom-28 z-50 flex justify-center">
-      <span className="rounded-2xl bg-ink px-5 py-3 text-center text-[15px] font-bold text-paper shadow-lg">{msg}</span>
+      <span key={msg} className="animate-rise rounded-2xl bg-ink px-5 py-3 text-center text-[15px] font-bold text-paper shadow-lg">{msg}</span>
     </div>
   )
 }
